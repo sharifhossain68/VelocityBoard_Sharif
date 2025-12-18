@@ -19,23 +19,7 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-builder.Services.AddDbContext<VelocityBoardDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("VelocityBoardConnection")));
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-.AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = false,
-        ValidateAudience = false,
-        ValidateLifetime = true,
-        IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)
-
-        )
-    };
-});
 
 builder.Services.AddAuthorization();
 //builder.Services.AddScoped<JwtService>();
@@ -44,9 +28,13 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-app.UseAuthentication();
+
 app.UseAuthorization();
 
+builder.Services.AddHttpClient();
+builder.Services.AddSession();
+
+app.UseSession();
 
 
 

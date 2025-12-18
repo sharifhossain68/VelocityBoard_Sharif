@@ -16,10 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\VelocityBoard.Core\VelocityBoard.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Service\" />
+    <ProjectReference Include="..\VelocityBoard.Infrastructure\VelocityBoard.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

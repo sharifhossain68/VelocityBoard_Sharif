@@ -1,0 +1,23 @@
+﻿@page
+@model IndexModel
+
+<h2>Dashboard</h2>
+
+<a class="btn btn-success mb-2" href="/Tasks/Create">New Task</a>
+
+<table class="table table-bordered">
+    <tr>
+        <th>Title</th>
+        <th>Status</th>
+        <th>Due</th>
+    </tr>
+
+    @foreach (var t in Model.Tasks)
+    {
+        <tr>
+            <td>@t.Title</td>
+            <td>@t.Status</td>
+            <td>@t.DueDate.ToShortDateString()</td>
+        </tr>
+    }
+</table>
