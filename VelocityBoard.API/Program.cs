@@ -2,7 +2,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using VelocityBoard.API.Service;
 using VelocityBoard.Infrastructure.Data;
+using VelocityBoard.Infrastructure.Repostories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +31,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         )
     };
 });
+builder.Services.AddScoped<JwtService>();
+builder.Services.AddScoped<TaskRepository>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
