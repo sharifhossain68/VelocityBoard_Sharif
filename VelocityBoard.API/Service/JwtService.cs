@@ -6,17 +6,18 @@ using System.Security.Claims;
 using System.Text;
 using VelocityBoard.Core.DTOs;
 using VelocityBoard.Core.Entities;
+using VelocityBoard.Core.Interface;
 using VelocityBoard.Infrastructure.Repostories;
 
 namespace VelocityBoard.API.Service
 {
-    public class JwtService
+    public class JwtService 
     {
         private readonly IConfiguration _config;
-        private readonly JWTRepository _jwtDataService;
+        private readonly IJWTRepository _jwtDataService;
 
 
-        public JwtService(IConfiguration config, JWTRepository jWTRepository)
+        public JwtService(IConfiguration config, IJWTRepository jWTRepository)
         {
             _config = config;
             _jwtDataService = jWTRepository;

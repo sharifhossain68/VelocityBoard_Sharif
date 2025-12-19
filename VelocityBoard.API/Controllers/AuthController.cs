@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using VelocityBoard.API.Service;
 using VelocityBoard.Core.DTOs;
 using VelocityBoard.Core.Entities;
+using VelocityBoard.Core.Interface;
 using VelocityBoard.Infrastructure.Data;
 
 namespace VelocityBoard.API.Controllers
@@ -14,12 +15,12 @@ namespace VelocityBoard.API.Controllers
     public class AuthController : ControllerBase
     {
         private readonly JwtService _service;
-        private readonly JwtService _jwt;
+        
 
-        public AuthController( JwtService jwt)
+        public AuthController(JwtService jwt)
         {
           
-            _jwt = jwt;
+            _service = jwt;
         }
 
         [HttpPost("register")]
@@ -37,13 +38,13 @@ namespace VelocityBoard.API.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginDTO  loginDTO)
+        public async Task<IActionResult> Login([FromBody] LoginDTO  loginDTO)
         {
             var user = await _service.GetLoginData(loginDTO);
             if (user == null || !BCrypt.Net.BCrypt.Verify(loginDTO.Password, user.PasswordHash))
                 return Unauthorized();
 
-            var token = _jwt.GenerateToken(user);
+            var token = _service.GenerateToken(user);
             return Ok(new { token });
         }
     }

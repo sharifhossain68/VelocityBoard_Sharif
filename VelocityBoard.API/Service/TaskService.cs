@@ -1,14 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using VelocityBoard.Core.Entities;
+using VelocityBoard.Core.Interface;
 using VelocityBoard.Infrastructure.Repostories;
 
 namespace VelocityBoard.API.Service
 {
     public class TaskService
     {
-        readonly private TaskRepository _taskRepository;
+        readonly private ITaskRepository _taskRepository;
 
-         public TaskService( TaskRepository taskRepository)
+         public TaskService( ITaskRepository taskRepository)
         {
             _taskRepository = taskRepository;
         }
@@ -24,7 +25,7 @@ namespace VelocityBoard.API.Service
         }
 
 
-        public async Task<TaskItem> Update(int id, TaskItem task)
+        public async Task<TaskItem> UpdateAsync(int id, TaskItem task)
         {
             var objtask = await _taskRepository.Update(id, task);
             return objtask;

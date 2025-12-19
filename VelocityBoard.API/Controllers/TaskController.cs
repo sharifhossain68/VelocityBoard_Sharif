@@ -2,18 +2,13 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Threading.Tasks;
 using VelocityBoard.API.Service;
 using VelocityBoard.Core.Entities;
 using VelocityBoard.Core.Interface;
 
 namespace VelocityBoard.API.Controllers
 {
-    //[Route("api/[controller]")]
-    //[ApiController]
-    //public class TaskController : ControllerBase
-    //{
-    //}
-
 
     [ApiController]
     [Route("api/tasks")]
@@ -24,29 +19,33 @@ namespace VelocityBoard.API.Controllers
 
         public TasksController(TaskService  taskService)
         {
-            _taskService = taskService; ;
+            _taskService = taskService; 
         }
-
+        [AllowAnonymous]
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            return  Ok(_taskService.GetAll());
+            return  Ok( await _taskService.GetAll());
         }
-
+    
         [HttpPost]
         public async Task<IActionResult> Create(TaskItem task)
         {
            var objtask =  await _taskService.Create(task);
             return Ok(objtask);
         }
-
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, TaskItem task)
         {
-            var existing = await _taskService.Update(id,task);
-           
-            return Ok(existing);
+            if (task.Id == 0)
+                return BadRequest("ID missing");
+
+            await _taskService.UpdateAsync(id, task);
+            return NoContent();
         }
+
+
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)

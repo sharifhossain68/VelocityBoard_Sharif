@@ -10,6 +10,7 @@ namespace VelocityBoard.Core.Interface
 {
     public interface IJWTRepository
     {
+        //string GenerateToken(User user);
         Task<User> Register(User user);
         Task<User?> GetLoginData(LoginDTO loginDTO);
     }

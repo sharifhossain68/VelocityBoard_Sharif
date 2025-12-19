@@ -18,31 +18,10 @@ namespace VelocityBoard.Web.Pages.Dashboard
             _clientFactory = clientFactory;
         }
 
-        public async Task OnGetAsync()
-        {
-            var token = HttpContext.Session.GetString("token");
-
-            var client = _clientFactory.CreateClient();
-            client.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", token);
-
-            var response = await client.GetAsync(
-                $"{_config["ApiSettings:BaseUrl"]}/api/tasks");
-
-            if (response.IsSuccessStatusCode)
-            {
-                Tasks = await response.Content.ReadFromJsonAsync<List<TaskItem>>() ?? [];
-            }
-            if (string.IsNullOrEmpty(token))
-            {
-                Response.Redirect("/Account/Login");
-                return;
-            }
-
-        }
         public async Task OnGetAsync(string? search, string? status)
         {
             var token = HttpContext.Session.GetString("token");
+
             if (string.IsNullOrEmpty(token))
             {
                 Response.Redirect("/Account/Login");
@@ -66,7 +45,7 @@ namespace VelocityBoard.Web.Pages.Dashboard
             if (!string.IsNullOrEmpty(status))
                 Tasks = Tasks.Where(t => t.Status.ToString() == status).ToList();
         }
-
     }
+
 }
 

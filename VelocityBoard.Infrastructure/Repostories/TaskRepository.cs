@@ -13,9 +13,14 @@ namespace VelocityBoard.Infrastructure.Repostories
     public class TaskRepository : ITaskRepository
     {
         private readonly VelocityBoardDbContext _context;
+        public TaskRepository(VelocityBoardDbContext context)
+        {
+            _context = context;
+        }
         public async Task<IEnumerable<TaskItem>> GetAll()
         {
-            return await _context.Tasks.ToListAsync();
+            var tasks = await _context.Tasks.ToListAsync();
+            return tasks;
         }
 
         public async Task<TaskItem> Create(TaskItem task)

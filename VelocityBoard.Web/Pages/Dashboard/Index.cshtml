@@ -18,16 +18,114 @@
             <td>@t.Title</td>
             <td>@t.Status</td>
             <td>@t.DueDate.ToShortDateString()</td>
+            <td>
+                <button class="btn btn-sm btn-secondary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#editModal"
+                        data-id="@t.Id"
+                        data-title="@t.Title"
+                        data-status="@t.Status"
+                        data-due="@t.DueDate.ToString("yyyy-MM-dd")">
+                    Edit
+                </button>
+
+
+          
+            </td>
+
+
         </tr>
     }
 </table>
-<form method="get" class="mb-3 d-flex gap-2">
-    <input name="search" class="form-control" placeholder="Search title" />
-    <select name="status" class="form-control">
-        <option value="">All</option>
-        <option>Pending</option>
-        <option>InProgress</option>
-        <option>Completed</option>
-    </select>
-    <button class="btn btn-secondary">Filter</button>
-</form>
+<div class="modal fade" id="editModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Task</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <input type="hidden" id="taskId" />
+
+                <div class="mb-2">
+                    <label>Title</label>
+                    <input class="form-control" id="title" />
+                </div>
+
+                <div class="mb-2">
+                    <label>Status</label>
+                    <select class="form-control" id="status">
+                        <option>Pending</option>
+                        <option>Done</option>
+                    </select>
+                </div>
+
+                <div class="mb-2">
+                    <label>Due Date</label>
+                    <input type="date" class="form-control" id="dueDate" />
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="saveTask()">Save</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+    var editModal = document.getElementById('editModal');
+
+    editModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget; // Button that triggered the modal
+
+        var id = button.getAttribute('data-id');
+        var title = button.getAttribute('data-title');
+        var status = button.getAttribute('data-status');
+        var due = button.getAttribute('data-due');
+
+        // Fill modal inputs
+        document.getElementById('taskId').value = id;
+        document.getElementById('title').value = title;
+        document.getElementById('status').value = status;
+        document.getElementById('dueDate').value = due;
+    });
+
+    async function saveTask() {
+    const task = {
+        Id: document.querySelector('#taskId').value,
+        Title: document.querySelector('#title').value,
+        Status: document.querySelector('#status').value,
+        DueDate: document.querySelector('#dueDate').value
+
+    };
+
+    const token = '@HttpContext.Session.GetString("token")'; // Razor inject session token
+
+    const response = await fetch(`/api/tasks/${task.Id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(task)
+    });
+
+    if (response.ok) {
+        // Close modal & reload table
+        const modal = bootstrap.Modal.getInstance(document.getElementById('taskModal'));
+        modal.hide();
+        location.reload(); // or update table row dynamically
+    } else {
+        alert('Failed to update task.');
+    }
+    }
+</script>
+
+

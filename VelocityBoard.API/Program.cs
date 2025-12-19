@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using VelocityBoard.API.Service;
+using VelocityBoard.Core.Interface;
 using VelocityBoard.Infrastructure.Data;
 using VelocityBoard.Infrastructure.Repostories;
 
@@ -31,8 +32,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         )
     };
 });
+
+
+builder.Services.AddScoped<ITaskRepository, TaskRepository>();
+builder.Services.AddScoped<IJWTRepository, JWTRepository>();
+
+
+builder.Services.AddScoped<TaskService>();
 builder.Services.AddScoped<JwtService>();
-builder.Services.AddScoped<TaskRepository>();
 
 var app = builder.Build();
 

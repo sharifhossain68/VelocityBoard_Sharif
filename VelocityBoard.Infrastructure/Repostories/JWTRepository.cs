@@ -14,6 +14,12 @@ namespace VelocityBoard.Infrastructure.Repostories
     public class JWTRepository : IJWTRepository
     {
         private readonly VelocityBoardDbContext _context;
+
+        public JWTRepository(VelocityBoardDbContext context)
+        {
+            _context = context;
+        }
+
         public async Task<User> Register(User  user)
         {
             try
